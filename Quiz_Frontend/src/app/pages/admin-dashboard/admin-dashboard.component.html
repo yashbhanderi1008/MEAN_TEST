@@ -1,0 +1,92 @@
+<div class="d-flex">
+    <nav class="sidebar vh-100">
+        <h1 class="m-3">Quizzes</h1>
+        <ul class="nav flex-column list-unstyled components">
+            <li><a (click)="showComponent('overview')">Overview</a></li>
+            <li><a (click)="showComponent('users')">Users</a></li>
+            <li><a (click)="showComponent('questions')">Questions</a></li>
+        </ul>
+    </nav>
+
+    <div class="w-100 content">
+        <header class="d-flex justify-content-between align-items-center p-3 bg-primary text-white">
+            <h1 *ngIf="currentComponent === 'overview'">Dashboard</h1>
+            <h1 *ngIf="currentComponent === 'users'">Users</h1>
+            <div *ngIf="currentComponent === 'questions'" class="d-flex justify-content-between w-100">
+                <h1>Questions</h1>
+                <button class="btn btn-light px-5" data-bs-toggle="modal" data-bs-target="#exampleModal">Add
+                    Question</button>
+            </div>
+        </header>
+
+        <main class="flex-grow-1 py-3 px-5">
+            <app-overview *ngIf="currentComponent === 'overview'" [data]="data"></app-overview>
+            <app-questions *ngIf="currentComponent === 'questions'" [data]="data"></app-questions>
+            <app-users *ngIf="currentComponent === 'users'" [data]="data"></app-users>
+        </main>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel" class="fs-4 my-auto">New Question</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" #closeForm></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                    <div class="form-group m-1">
+                        <label for="question">Question</label>
+                        <input type="text" formControlName="question" class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && f['question'].errors }" id="question" />
+                        <div *ngIf="submitted && f['question'].errors" class="invalid-feedback">
+                            <div *ngIf="f['question'].errors['required']">Question is required</div>
+                        </div>
+                    </div>
+
+                    <div formArrayName="options" class="m-1">
+                        <label>Options:</label>
+                        <div *ngFor="let option of options.controls; let i = index" class="ms-3 my-3">
+                            <div [formGroupName]="i">
+                                <input type="text" formControlName="option" class="form-control"
+                                    [ngClass]="{ 'is-invalid': submitted && option.get('option')?.errors }" />
+                                <div *ngIf="submitted && option.get('option')?.errors" class="invalid-feedback">
+                                    <div *ngIf="option.get('option')?.errors">Option is required</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group m-1">
+                        <label for="correctOptionIndex">Correct Option Index</label>
+                        <input type="number" formControlName="correctOptionIndex" class="form-control" min="0" max="3"
+                            [ngClass]="{ 'is-invalid': submitted && f['correctOptionIndex'].errors }"
+                            id="correctOptionIndex" />
+                        <div *ngIf="submitted && f['correctOptionIndex'].errors" class="invalid-feedback">
+                            <div *ngIf="f['correctOptionIndex'].errors['required']">Correct Option Index is required
+                            </div>
+                            <div *ngIf="f['correctOptionIndex'].errors['max']">Correct Option Index must between 0-3
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group m-1">
+                        <label for="difficultyRating">Dificulty Rating</label>
+                        <input type="number" formControlName="difficultyRating" class="form-control" min="0" max="10"
+                            [ngClass]="{ 'is-invalid': submitted && f['difficultyRating'].errors }"
+                            id="difficultyRating" />
+                        <div *ngIf="submitted && f['difficultyRating'].errors" class="invalid-feedback">
+                            <div *ngIf="f['difficultyRating'].errors['required']">Dificulty Rating is required</div>
+                            <div *ngIf="f['difficultyRating'].errors['max']">Dificulty Rating must between 0-10</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-center my-3">
+                        <button type="submit" class="btn btn-primary w-50" (click)="onSubmit()">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

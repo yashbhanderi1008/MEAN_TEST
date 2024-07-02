@@ -1,0 +1,38 @@
+<mat-form-field>
+    <mat-label>Filter</mat-label>
+    <input matInput (keyup)="applyFilter($event)" #input>
+  </mat-form-field>
+  
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort>
+  
+      <div matColumnDef="no">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> No. </th>
+        <td mat-cell *matCellDef="let row; let i = index"> {{i+1}} </td>
+      </div>
+  
+      <div matColumnDef="username">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> User </th>
+        <td mat-cell *matCellDef="let row"> {{row.username}} </td>
+      </div>
+  
+      <div matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> E-mail </th>
+        <td mat-cell *matCellDef="let row"> {{row.email}} </td>
+      </div>
+  
+      <div matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Role </th>
+        <td mat-cell *matCellDef="let row"> {{row.role}} </td>
+      </div>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+      </tr>
+    </table>
+  
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+  </div>
